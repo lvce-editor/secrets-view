@@ -1,0 +1,5 @@
+{
+  "files": [],
+  "include": [],
+  "references": [{ "path": "./packages/secrets-view" }, { "path": "./packages/build" }, { "path": "./packages/server" }, { "path": "./packages/e2e" }]
+}
