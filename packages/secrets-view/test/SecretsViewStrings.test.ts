@@ -13,6 +13,10 @@ test('edit', () => {
   expect(SecretsViewStrings.edit()).toBe('Edit')
 })
 
+test('editSecret', () => {
+  expect(SecretsViewStrings.editSecret('sample.extension', 'token')).toBe('Edit secret sample.extension / token')
+})
+
 test('loadingSecrets', () => {
   expect(SecretsViewStrings.loadingSecrets()).toBe('Loading secrets…')
 })
@@ -23,6 +27,14 @@ test('noSecretsStored', () => {
 
 test('save', () => {
   expect(SecretsViewStrings.save()).toBe('Save')
+})
+
+test('saveSecret', () => {
+  expect(SecretsViewStrings.saveSecret('sample.extension', 'token')).toBe('Save secret sample.extension / token')
+})
+
+test('cancelEditingSecret', () => {
+  expect(SecretsViewStrings.cancelEditingSecret('sample.extension', 'token')).toBe('Cancel editing secret sample.extension / token')
 })
 
 test('secrets', () => {
