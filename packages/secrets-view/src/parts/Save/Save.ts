@@ -1,5 +1,7 @@
+import { PlatformType } from '@lvce-editor/constants'
 import { MainProcess } from '@lvce-editor/rpc-registry'
 import type { SecretsViewState } from '../SecretsViewState/SecretsViewState.ts'
+import * as PlatformState from '../PlatformState/PlatformState.ts'
 
 export const save = async (state: SecretsViewState): Promise<SecretsViewState> => {
   const { editingIndex, editingValue, secrets } = state
@@ -7,7 +9,9 @@ export const save = async (state: SecretsViewState): Promise<SecretsViewState> =
   if (!secret) {
     return state
   }
-  await MainProcess.invoke('SecretStorage.store', secret.extensionId, secret.key, editingValue)
+  if (PlatformState.get() === PlatformType.Electron) {
+    await MainProcess.invoke('SecretStorage.store', secret.extensionId, secret.key, editingValue)
+  }
   return {
     ...state,
     editingIndex: -1,

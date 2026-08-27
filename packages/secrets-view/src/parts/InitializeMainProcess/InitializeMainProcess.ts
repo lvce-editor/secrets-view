@@ -1,3 +1,4 @@
+import { PlatformType } from '@lvce-editor/constants'
 import { LazyTransferMessagePortRpcParent, type Rpc } from '@lvce-editor/rpc'
 import { MainProcess, RendererWorker } from '@lvce-editor/rpc-registry'
 
@@ -22,7 +23,10 @@ const send = async (port: MessagePort, dependencies: MainProcessDependencies): P
   )
 }
 
-export const initializeMainProcess = async (dependencies: MainProcessDependencies = defaultDependencies): Promise<void> => {
+export const initializeMainProcess = async (platform: number, dependencies: MainProcessDependencies = defaultDependencies): Promise<void> => {
+  if (platform !== PlatformType.Electron) {
+    return
+  }
   const rpc: Rpc = await dependencies.createRpc({
     commandMap: {},
     send(port) {
