@@ -4,6 +4,7 @@ import * as Edit from '../Edit/Edit.ts'
 import * as HandleClick from '../HandleClick/HandleClick.ts'
 import * as HandleInput from '../HandleInput/HandleInput.ts'
 import { handleMessagePort } from '../HandleMessagePort/HandleMessagePort.ts'
+import * as Initialize from '../Initialize/Initialize.ts'
 import * as LoadContent from '../LoadContent/LoadContent.ts'
 import * as Render2 from '../Render2/Render2.ts'
 import * as RenderEventListeners from '../RenderEventListeners/RenderEventListeners.ts'
@@ -24,6 +25,7 @@ export const commandMap = {
   'SecretsView.handleClick': SecretsViewStates.wrapCommand(HandleClick.handleClick),
   'SecretsView.handleInput': SecretsViewStates.wrapCommand(HandleInput.handleInput),
   'SecretsView.handleMessagePort': handleDirectMessagePort,
+  'SecretsView.initialize': Initialize.initialize,
   'SecretsView.loadContent': SecretsViewStates.wrapCommand(LoadContent.loadContent),
   'SecretsView.render2': Render2.render2,
   'SecretsView.renderEventListeners': RenderEventListeners.renderEventListeners,

@@ -1,7 +1,9 @@
-import { expect, test } from '@jest/globals'
+import { beforeEach, expect, test } from '@jest/globals'
+import { PlatformType } from '@lvce-editor/constants'
 import { MainProcess } from '@lvce-editor/rpc-registry'
 import type { SecretsViewState } from '../src/parts/SecretsViewState/SecretsViewState.ts'
 import { edit } from '../src/parts/Edit/Edit.ts'
+import * as PlatformState from '../src/parts/PlatformState/PlatformState.ts'
 import { save } from '../src/parts/Save/Save.ts'
 
 const createRpc = (commands: Readonly<Record<string, (...args: readonly any[]) => any>>): any => {
@@ -33,6 +35,10 @@ const state: SecretsViewState = {
   y: 0,
 }
 
+beforeEach(() => {
+  PlatformState.set(PlatformType.Electron)
+})
+
 test('edit ignores an unknown row', async () => {
   await expect(edit(state, 10)).resolves.toBe(state)
 })
@@ -62,4 +68,22 @@ test('save stores the edited value and clears it from state', async () => {
 
 test('save ignores an unknown row', async () => {
   await expect(save(state)).resolves.toBe(state)
+})
+
+test('edit uses injected values outside Electron', async () => {
+  PlatformState.set(PlatformType.Web)
+  const { secrets } = state
+  const [secret] = secrets
+
+  await expect(edit({ ...state, secrets: [{ ...secret, value: 'injected-secret' }] }, 0)).resolves.toMatchObject({
+    editingIndex: 0,
+    editingValue: 'injected-secret',
+  })
+})
+
+test('save updates view state without persistence outside Electron', async () => {
+  PlatformState.set(PlatformType.Web)
+  const editingState = { ...state, editingIndex: 0, editingValue: 'updated-secret' }
+
+  await expect(save(editingState)).resolves.toMatchObject({ editingIndex: -1, editingValue: '' })
 })

@@ -1,5 +1,6 @@
 import type { Rpc } from '@lvce-editor/rpc'
 import { expect, jest, test } from '@jest/globals'
+import { PlatformType } from '@lvce-editor/constants'
 import type { MainProcessDependencies } from '../src/parts/InitializeMainProcess/InitializeMainProcess.ts'
 import { initializeMainProcess } from '../src/parts/InitializeMainProcess/InitializeMainProcess.ts'
 
@@ -24,7 +25,7 @@ const createDependencies = (): MainProcessDependencies => {
 test('initializeMainProcess creates a direct main-process rpc through renderer-worker', async () => {
   const dependencies = createDependencies()
 
-  await initializeMainProcess(dependencies)
+  await initializeMainProcess(PlatformType.Electron, dependencies)
 
   expect(dependencies.invokeRendererAndTransfer).toHaveBeenCalledWith(
     'SendMessagePortToMainProcess.sendMessagePortToMainProcess',
@@ -33,4 +34,14 @@ test('initializeMainProcess creates a direct main-process rpc through renderer-w
     0,
   )
   expect(dependencies.setMainProcess).toHaveBeenCalledTimes(1)
+})
+
+test('initializeMainProcess does nothing outside Electron', async () => {
+  const dependencies = createDependencies()
+
+  await initializeMainProcess(PlatformType.Web, dependencies)
+
+  expect(dependencies.createRpc).not.toHaveBeenCalled()
+  expect(dependencies.invokeRendererAndTransfer).not.toHaveBeenCalled()
+  expect(dependencies.setMainProcess).not.toHaveBeenCalled()
 })
