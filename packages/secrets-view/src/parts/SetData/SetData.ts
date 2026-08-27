@@ -1,7 +1,6 @@
 import type { Secret } from '../Secret/Secret.ts'
 import type { SecretsViewState } from '../SecretsViewState/SecretsViewState.ts'
-
-const compareSecrets = (a: Secret, b: Secret): number => a.extensionId.localeCompare(b.extensionId) || a.key.localeCompare(b.key)
+import { compareSecrets } from '../CompareSecrets/CompareSecrets.ts'
 
 export const setData = (state: SecretsViewState, secrets: readonly Secret[]): SecretsViewState => ({
   ...state,
