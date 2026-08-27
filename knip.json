@@ -7,7 +7,7 @@
     "packages/build": {
       "entry": ["src/computeNodeModulesCacheKey.ts"],
       "project": ["src/**/*.ts"],
-      "ignoreDependencies": ["esbuild"]
+      "ignoreDependencies": ["esbuild", "playwright"]
     },
     "packages/e2e": {
       "entry": ["src/**/*.ts"],
