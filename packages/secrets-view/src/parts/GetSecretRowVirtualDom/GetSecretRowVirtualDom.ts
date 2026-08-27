@@ -17,9 +17,9 @@ const rowNode: VirtualDomNode = {
   type: VirtualDomElements.Li,
 }
 
-const button = (name: string, label: string): readonly VirtualDomNode[] => [
+const button = (name: string, label: string, ariaLabel = label): readonly VirtualDomNode[] => [
   {
-    ariaLabel: label,
+    ariaLabel,
     childCount: 1,
     className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary, ClassNames.SecretsViewButton),
     name,
@@ -32,8 +32,11 @@ const button = (name: string, label: string): readonly VirtualDomNode[] => [
 export const getSecretRowVirtualDom = (secret: Secret, index: number, editingIndex: number, editingValue: string): readonly VirtualDomNode[] => {
   const editing = editingIndex === index
   const actionDom = editing
-    ? [...button(`save:${index}`, SecretsViewStrings.save()), ...button(`cancel:${index}`, SecretsViewStrings.cancel())]
-    : button(`edit:${index}`, SecretsViewStrings.edit())
+    ? [
+        ...button(`save:${index}`, SecretsViewStrings.save(), SecretsViewStrings.saveSecret(secret.extensionId, secret.key)),
+        ...button(`cancel:${index}`, SecretsViewStrings.cancel(), SecretsViewStrings.cancelEditingSecret(secret.extensionId, secret.key)),
+      ]
+    : button(`edit:${index}`, SecretsViewStrings.edit(), SecretsViewStrings.editSecret(secret.extensionId, secret.key))
   const actionCount = editing ? 2 : 1
   return [
     rowNode,
@@ -42,6 +45,7 @@ export const getSecretRowVirtualDom = (secret: Secret, index: number, editingInd
       className: mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewExtensionId),
       inputType: 'text',
       readOnly: true,
+      tabIndex: -1,
       title: secret.extensionId,
       type: VirtualDomElements.Input,
       value: secret.extensionId,
@@ -51,6 +55,7 @@ export const getSecretRowVirtualDom = (secret: Secret, index: number, editingInd
       className: mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewKey),
       inputType: 'text',
       readOnly: true,
+      tabIndex: -1,
       title: secret.key,
       type: VirtualDomElements.Input,
       value: secret.key,
@@ -61,6 +66,7 @@ export const getSecretRowVirtualDom = (secret: Secret, index: number, editingInd
       inputType: 'password',
       name: 'secret-value',
       readOnly: !editing,
+      tabIndex: editing ? 0 : -1,
       type: VirtualDomElements.Input,
       value: editing ? editingValue : maskedValue,
       ...(editing && { onInput: DomEventListenerFunctions.HandleInput }),

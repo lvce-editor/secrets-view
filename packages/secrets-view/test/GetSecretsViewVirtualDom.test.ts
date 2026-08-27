@@ -14,8 +14,14 @@ test('does not render plaintext while read-only', () => {
     y: 0,
   })
   expect(JSON.stringify(dom)).not.toContain('plain-text')
+  const extensionInput = dom.find((node) => node.className === 'InputBox SecretsViewExtensionId')
+  const keyInput = dom.find((node) => node.className === 'InputBox SecretsViewKey')
   const valueInput = dom.find((node) => node.className === 'InputBox SecretsViewValue')
-  expect(valueInput).toMatchObject({ inputType: 'password', readOnly: true, value: '••••••••••••' })
+  const editButton = dom.find((node) => node.name === 'edit:0')
+  expect(extensionInput).toMatchObject({ readOnly: true, tabIndex: -1 })
+  expect(keyInput).toMatchObject({ readOnly: true, tabIndex: -1 })
+  expect(valueInput).toMatchObject({ inputType: 'password', readOnly: true, tabIndex: -1, value: '••••••••••••' })
+  expect(editButton).toMatchObject({ ariaLabel: 'Edit secret sample.extension / token' })
 })
 
 test('renders a password input while editing', () => {
@@ -31,7 +37,11 @@ test('renders a password input while editing', () => {
     y: 0,
   })
   const valueInput = dom.find((node) => node.className === 'InputBox SecretsViewValue')
-  expect(valueInput).toMatchObject({ inputType: 'password', readOnly: false, value: 'plain-text' })
+  const saveButton = dom.find((node) => node.name === 'save:0')
+  const cancelButton = dom.find((node) => node.name === 'cancel:0')
+  expect(valueInput).toMatchObject({ inputType: 'password', readOnly: false, tabIndex: 0, value: 'plain-text' })
+  expect(saveButton).toMatchObject({ ariaLabel: 'Save secret sample.extension / token' })
+  expect(cancelButton).toMatchObject({ ariaLabel: 'Cancel editing secret sample.extension / token' })
 })
 
 test('renders an empty status after loading', () => {
