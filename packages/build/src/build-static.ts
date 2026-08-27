@@ -1,5 +1,5 @@
-import { cp, readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { cp, mkdir, readFile, writeFile } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from './root.ts'
 
@@ -14,8 +14,11 @@ const remoteUrl = `/remote/${pathToFileURL(workerPath).toString().slice(8)}`
 const content = await readFile(rendererWorkerPath, 'utf8')
 const occurrence = `// const secretsViewWorkerUrl = \`\${assetDir}/packages/secrets-view/dist/secretsViewWorkerMain.js\`\nconst secretsViewWorkerUrl = \`${remoteUrl}\``
 const replacement = 'const secretsViewWorkerUrl = `${assetDir}/packages/secrets-view/dist/secretsViewWorkerMain.js`'
-if (!content.includes(occurrence)) {
-  throw new Error('secrets view worker override not found')
+if (content.includes(occurrence)) {
+  await writeFile(rendererWorkerPath, content.replace(occurrence, replacement))
 }
-await writeFile(rendererWorkerPath, content.replace(occurrence, replacement))
+
+const staticWorkerPath = join(root, 'dist', commitHash, 'packages', 'secrets-view', 'dist', 'secretsViewWorkerMain.js')
+await mkdir(dirname(staticWorkerPath), { recursive: true })
+await cp(workerPath, staticWorkerPath)
 await cp(join(root, 'dist'), join(root, '.tmp', 'static'), { recursive: true })
