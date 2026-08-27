@@ -5,6 +5,7 @@ test('does not render plaintext while read-only', () => {
   const dom = getSecretsViewVirtualDom({
     editingIndex: -1,
     editingValue: '',
+    errorMessage: '',
     height: 600,
     loaded: true,
     secrets: [{ extensionId: 'sample.extension', key: 'token', value: 'plain-text' }],
@@ -28,6 +29,7 @@ test('renders a password input while editing', () => {
   const dom = getSecretsViewVirtualDom({
     editingIndex: 0,
     editingValue: 'plain-text',
+    errorMessage: '',
     height: 600,
     loaded: true,
     secrets: [{ extensionId: 'sample.extension', key: 'token' }],
@@ -48,6 +50,7 @@ test('renders an empty status after loading', () => {
   const dom = getSecretsViewVirtualDom({
     editingIndex: -1,
     editingValue: '',
+    errorMessage: '',
     height: 600,
     loaded: true,
     secrets: [],
@@ -63,6 +66,7 @@ test('renders a loading status before loading', () => {
   const dom = getSecretsViewVirtualDom({
     editingIndex: -1,
     editingValue: '',
+    errorMessage: '',
     height: 600,
     loaded: false,
     secrets: [],
@@ -72,4 +76,24 @@ test('renders a loading status before loading', () => {
     y: 0,
   })
   expect(JSON.stringify(dom)).toContain('Loading secrets…')
+})
+
+test('renders storage failures as an accessible alert', () => {
+  const dom = getSecretsViewVirtualDom({
+    editingIndex: -1,
+    editingValue: '',
+    errorMessage: 'Could not reveal this secret.',
+    height: 600,
+    loaded: true,
+    secrets: [{ extensionId: 'sample.extension', key: 'token' }],
+    uid: 1,
+    width: 800,
+    x: 0,
+    y: 0,
+  })
+  const root = dom[0]
+  const alert = dom.find((node) => node.className === 'SecretsViewError')
+  expect(root).toMatchObject({ childCount: 3 })
+  expect(alert).toMatchObject({ childCount: 1, role: 'alert' })
+  expect(JSON.stringify(dom)).toContain('Could not reveal this secret.')
 })

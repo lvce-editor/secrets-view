@@ -7,6 +7,7 @@ import * as PlatformState from '../src/parts/PlatformState/PlatformState.ts'
 const state: SecretsViewState = {
   editingIndex: -1,
   editingValue: '',
+  errorMessage: '',
   height: 600,
   loaded: false,
   secrets: [],

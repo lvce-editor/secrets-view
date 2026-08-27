@@ -5,6 +5,7 @@ import { setData } from '../src/parts/SetData/SetData.ts'
 const state: SecretsViewState = {
   editingIndex: 1,
   editingValue: 'plain-text',
+  errorMessage: 'Previous failure',
   height: 600,
   loaded: false,
   secrets: [],
@@ -23,5 +24,6 @@ test('sorts metadata and clears the editing value', () => {
   expect(result.loaded).toBe(true)
   expect(result.editingIndex).toBe(-1)
   expect(result.editingValue).toBe('')
+  expect(result.errorMessage).toBe('')
   expect(result.secrets.map(({ key }) => key)).toEqual(['another', 'secret', 'token'])
 })

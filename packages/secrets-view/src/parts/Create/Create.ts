@@ -5,6 +5,7 @@ export const create = (uid: number, _uri: string, x: number, y: number, width: n
   const state: SecretsViewState = {
     editingIndex: -1,
     editingValue: '',
+    errorMessage: '',
     height,
     loaded: false,
     secrets: [],

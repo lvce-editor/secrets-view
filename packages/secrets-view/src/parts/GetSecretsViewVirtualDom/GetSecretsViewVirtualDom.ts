@@ -15,12 +15,6 @@ const emptyNode: VirtualDomNode = {
   type: VirtualDomElements.Div,
 }
 
-const rootNode: VirtualDomNode = {
-  childCount: 2,
-  className: mergeClassNames(ClassNames.Viewlet, ClassNames.SecretsView),
-  type: VirtualDomElements.Div,
-}
-
 const headerNode: VirtualDomNode = {
   childCount: 2,
   className: ClassNames.SecretsViewHeader,
@@ -39,22 +33,35 @@ const descriptionNode: VirtualDomNode = {
   type: VirtualDomElements.P,
 }
 
+const errorNode: VirtualDomNode = {
+  childCount: 1,
+  className: ClassNames.SecretsViewError,
+  role: AriaRoles.Alert,
+  type: VirtualDomElements.Div,
+}
+
 const getEmptyDom = (loaded: boolean): readonly VirtualDomNode[] => [
   emptyNode,
   text(loaded ? SecretsViewStrings.noSecretsStored() : SecretsViewStrings.loadingSecrets()),
 ]
 
 export const getSecretsViewVirtualDom = (state: SecretsViewState): readonly VirtualDomNode[] => {
-  const { editingIndex, editingValue, loaded, secrets } = state
+  const { editingIndex, editingValue, errorMessage, loaded, secrets } = state
   const content =
     secrets.length === 0 ? getEmptyDom(loaded) : secrets.flatMap((secret, index) => getSecretRowVirtualDom(secret, index, editingIndex, editingValue))
+  const errorDom: readonly VirtualDomNode[] = errorMessage ? [errorNode, text(errorMessage)] : []
   return [
-    rootNode,
+    {
+      childCount: errorMessage ? 3 : 2,
+      className: mergeClassNames(ClassNames.Viewlet, ClassNames.SecretsView),
+      type: VirtualDomElements.Div,
+    },
     headerNode,
     titleNode,
     text(SecretsViewStrings.secrets()),
     descriptionNode,
     text(SecretsViewStrings.description()),
+    ...errorDom,
     {
       ariaLabel: SecretsViewStrings.storedSecrets(),
       childCount: secrets.length || 1,

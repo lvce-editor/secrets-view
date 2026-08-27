@@ -5,6 +5,7 @@ import { handleClick } from '../src/parts/HandleClick/HandleClick.ts'
 const state: SecretsViewState = {
   editingIndex: -1,
   editingValue: '',
+  errorMessage: '',
   height: 600,
   loaded: true,
   secrets: [{ extensionId: 'sample.extension', key: 'token', value: 'plain-text' }],

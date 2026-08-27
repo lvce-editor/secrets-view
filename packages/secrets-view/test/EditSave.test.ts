@@ -26,6 +26,7 @@ const createRpc = (commands: Readonly<Record<string, (...args: readonly any[]) =
 const state: SecretsViewState = {
   editingIndex: -1,
   editingValue: '',
+  errorMessage: '',
   height: 600,
   loaded: true,
   secrets: [{ extensionId: 'sample.extension', key: 'token' }],
@@ -53,6 +54,36 @@ test('edit fetches the value only after the explicit action', async () => {
 
   await expect(edit(state, 0)).resolves.toMatchObject({ editingIndex: 0, editingValue: 'plain-text' })
   expect(mockRpc.invocations).toEqual([['SecretStorage.get', 'sample.extension', 'token']])
+})
+
+test('edit exposes a recoverable error when storage cannot decrypt the secret', async () => {
+  const mockRpc = createRpc({
+    'SecretStorage.get'() {
+      throw new Error('Encryption is not available.')
+    },
+  })
+  MainProcess.set(mockRpc)
+
+  await expect(edit(state, 0)).resolves.toMatchObject({
+    editingIndex: -1,
+    editingValue: '',
+    errorMessage: 'Could not reveal secret sample.extension / token: Encryption is not available.',
+  })
+})
+
+test('a successful retry clears the previous error', async () => {
+  const mockRpc = createRpc({
+    'SecretStorage.get'() {
+      return 'plain-text'
+    },
+  })
+  MainProcess.set(mockRpc)
+
+  await expect(edit({ ...state, errorMessage: 'Previous failure' }, 0)).resolves.toMatchObject({
+    editingIndex: 0,
+    editingValue: 'plain-text',
+    errorMessage: '',
+  })
 })
 
 test('save stores the edited value and clears it from state', async () => {
