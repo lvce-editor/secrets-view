@@ -1,0 +1,16 @@
+import type { Test, TestApi } from '@lvce-editor/test-with-playwright'
+
+export const name = 'secrets-view-list-accessibility'
+
+export const test: Test = async ({ expect, SecretsView }: TestApi) => {
+  await SecretsView.show()
+  await SecretsView.setData([
+    { extensionId: 'first.extension', key: 'token', value: 'first-secret' },
+    { extensionId: 'second.extension', key: 'token', value: 'second-secret' },
+  ])
+
+  const list = SecretsView.root().locator('.SecretsViewList')
+  await expect(list).toHaveAttribute('role', 'list')
+  await expect(list).toHaveAttribute('aria-label', 'Stored secrets')
+  await expect(SecretsView.rows().first()).toHaveAttribute('role', 'listitem')
+}
