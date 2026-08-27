@@ -1,5 +1,5 @@
+import { MainProcess } from '@lvce-editor/rpc-registry'
 import type { SecretsViewState } from '../SecretsViewState/SecretsViewState.ts'
-import * as RendererProcess from '../RendererProcess/RendererProcess.ts'
 
 export const edit = async (state: SecretsViewState, index: number): Promise<SecretsViewState> => {
   const { secrets } = state
@@ -7,7 +7,7 @@ export const edit = async (state: SecretsViewState, index: number): Promise<Secr
   if (!secret) {
     return state
   }
-  const editingValue = secret.value ?? (await RendererProcess.invoke('SecretStorage.get', secret.extensionId, secret.key)) ?? ''
+  const editingValue = secret.value ?? (await MainProcess.invoke('SecretStorage.get', secret.extensionId, secret.key)) ?? ''
   return {
     ...state,
     editingIndex: index,
