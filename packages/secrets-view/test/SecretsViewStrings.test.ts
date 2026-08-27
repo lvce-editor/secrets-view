@@ -6,15 +6,21 @@ test('cancel', () => {
 })
 
 test('description', () => {
-  expect(SecretsViewStrings.description()).toBe('Stored extension secrets are encrypted. Values stay hidden until you choose Edit.')
+  expect(SecretsViewStrings.description()).toBe(
+    'Stored extension secrets are encrypted. Reveal or copy a value explicitly; choose Edit to update or delete secrets.',
+  )
 })
 
 test('edit', () => {
   expect(SecretsViewStrings.edit()).toBe('Edit')
 })
 
-test('editSecret', () => {
-  expect(SecretsViewStrings.editSecret('sample.extension', 'token')).toBe('Edit secret sample.extension / token')
+test('row action labels', () => {
+  expect(SecretsViewStrings.actionsForSecret('sample.extension', 'token')).toBe('Actions for secret sample.extension / token')
+  expect(SecretsViewStrings.showSecret('sample.extension', 'token')).toBe('Show secret sample.extension / token')
+  expect(SecretsViewStrings.hideSecret('sample.extension', 'token')).toBe('Hide secret sample.extension / token')
+  expect(SecretsViewStrings.copySecret('sample.extension', 'token')).toBe('Copy secret sample.extension / token')
+  expect(SecretsViewStrings.deleteSecret('sample.extension', 'token')).toBe('Delete secret sample.extension / token')
 })
 
 test('failedToRevealSecret', () => {
@@ -35,12 +41,19 @@ test('save', () => {
   expect(SecretsViewStrings.save()).toBe('Save')
 })
 
-test('saveSecret', () => {
-  expect(SecretsViewStrings.saveSecret('sample.extension', 'token')).toBe('Save secret sample.extension / token')
+test('view action labels', () => {
+  expect(SecretsViewStrings.editSecrets()).toBe('Edit secrets')
+  expect(SecretsViewStrings.saveSecrets()).toBe('Save secrets')
+  expect(SecretsViewStrings.cancelEditingSecrets()).toBe('Cancel editing secrets')
+  expect(SecretsViewStrings.secretsActions()).toBe('Secrets actions')
 })
 
-test('cancelEditingSecret', () => {
-  expect(SecretsViewStrings.cancelEditingSecret('sample.extension', 'token')).toBe('Cancel editing secret sample.extension / token')
+test('operation failure labels', () => {
+  expect(SecretsViewStrings.failedToCopySecret('sample.extension', 'token', 'Clipboard unavailable')).toBe(
+    'Could not copy secret sample.extension / token: Clipboard unavailable',
+  )
+  expect(SecretsViewStrings.failedToEditSecrets('Encryption unavailable')).toBe('Could not edit secrets: Encryption unavailable')
+  expect(SecretsViewStrings.failedToSaveSecrets('Storage unavailable')).toBe('Could not save secrets: Storage unavailable')
 })
 
 test('secrets', () => {

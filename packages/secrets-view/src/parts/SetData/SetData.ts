@@ -4,9 +4,13 @@ import { compareSecrets } from '../CompareSecrets/CompareSecrets.ts'
 
 export const setData = (state: SecretsViewState, secrets: readonly Secret[]): SecretsViewState => ({
   ...state,
-  editingIndex: -1,
-  editingValue: '',
+  deletedIndices: [],
+  editingValues: [],
+  editMode: false,
   errorMessage: '',
   loaded: true,
+  originalValues: [],
+  revealedIndices: [],
   secrets: secrets.toSorted(compareSecrets),
+  secretValues: [],
 })

@@ -16,5 +16,9 @@ export const test: Test = async ({ expect, SecretsView }: TestApi) => {
   await expect(SecretsView.extensionId(0)).toHaveAttribute('tabindex', '-1')
   await expect(SecretsView.key(0)).toHaveAttribute('tabindex', '-1')
   await expect(SecretsView.value(0)).toHaveAttribute('tabindex', '-1')
-  await expect(SecretsView.row(0).locator('[aria-label="Edit secret first.extension / token"]')).toBeVisible()
+  await expect(SecretsView.root().locator('[aria-label="Edit secrets"]')).toBeVisible()
+  await expect(SecretsView.row(0).locator('[role="toolbar"]')).toHaveAttribute('aria-label', 'Actions for secret first.extension / token')
+  await expect(SecretsView.row(0).locator('[aria-label="Show secret first.extension / token"]')).toBeVisible()
+  await expect(SecretsView.row(0).locator('[aria-label="Copy secret first.extension / token"]')).toBeVisible()
+  await expect(SecretsView.row(0).locator('[aria-label="Delete secret first.extension / token"]')).toHaveCount(0)
 }

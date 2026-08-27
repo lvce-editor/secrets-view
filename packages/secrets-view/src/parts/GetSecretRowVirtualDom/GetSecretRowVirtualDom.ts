@@ -8,8 +8,6 @@ import * as SecretsViewStrings from '../SecretsViewStrings/SecretsViewStrings.ts
 
 const maskedValue = '••••••••••••'
 
-const text = (value: string): VirtualDomNode => ({ childCount: 0, text: value, type: VirtualDomElements.Text })
-
 const rowNode: VirtualDomNode = {
   childCount: 4,
   className: ClassNames.SecretsViewRow,
@@ -17,27 +15,46 @@ const rowNode: VirtualDomNode = {
   type: VirtualDomElements.Li,
 }
 
-const button = (name: string, label: string, ariaLabel = label): readonly VirtualDomNode[] => [
+const iconButton = (name: string, label: string, iconClassName: string): readonly VirtualDomNode[] => [
   {
-    ariaLabel,
+    ariaLabel: label,
     childCount: 1,
-    className: mergeClassNames(ClassNames.Button, ClassNames.ButtonPrimary, ClassNames.SecretsViewButton),
+    className: mergeClassNames(ClassNames.IconButton, ClassNames.SecretsViewButton),
     name,
     onClick: DomEventListenerFunctions.HandleClick,
+    title: label,
     type: VirtualDomElements.Button,
   },
-  text(label),
+  {
+    childCount: 0,
+    className: mergeClassNames(ClassNames.MaskIcon, iconClassName),
+    type: VirtualDomElements.Div,
+  },
 ]
 
-export const getSecretRowVirtualDom = (secret: Secret, index: number, editingIndex: number, editingValue: string): readonly VirtualDomNode[] => {
-  const editing = editingIndex === index
-  const actionDom = editing
-    ? [
-        ...button(`save:${index}`, SecretsViewStrings.save(), SecretsViewStrings.saveSecret(secret.extensionId, secret.key)),
-        ...button(`cancel:${index}`, SecretsViewStrings.cancel(), SecretsViewStrings.cancelEditingSecret(secret.extensionId, secret.key)),
-      ]
-    : button(`edit:${index}`, SecretsViewStrings.edit(), SecretsViewStrings.editSecret(secret.extensionId, secret.key))
-  const actionCount = editing ? 2 : 1
+export const getSecretRowVirtualDom = (
+  secret: Secret,
+  index: number,
+  editMode: boolean,
+  editingValues: readonly string[],
+  revealedIndices: readonly number[],
+  secretValues: readonly string[],
+): readonly VirtualDomNode[] => {
+  const revealed = revealedIndices.includes(index)
+  let value = maskedValue
+  if (editMode) {
+    value = editingValues[index]
+  } else if (revealed) {
+    value = secretValues[index]
+  }
+  const revealLabel = revealed
+    ? SecretsViewStrings.hideSecret(secret.extensionId, secret.key)
+    : SecretsViewStrings.showSecret(secret.extensionId, secret.key)
+  const actions = [
+    ...iconButton(`reveal:${index}`, revealLabel, revealed ? ClassNames.MaskIconEyeClosed : ClassNames.MaskIconEye),
+    ...iconButton(`copy:${index}`, SecretsViewStrings.copySecret(secret.extensionId, secret.key), ClassNames.MaskIconCopy),
+    ...(editMode ? iconButton(`delete:${index}`, SecretsViewStrings.deleteSecret(secret.extensionId, secret.key), ClassNames.MaskIconTrash) : []),
+  ]
   return [
     rowNode,
     {
@@ -63,19 +80,21 @@ export const getSecretRowVirtualDom = (secret: Secret, index: number, editingInd
     {
       childCount: 0,
       className: mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewValue),
-      inputType: 'password',
-      name: 'secret-value',
-      readOnly: !editing,
-      tabIndex: editing ? 0 : -1,
+      inputType: revealed ? 'text' : 'password',
+      name: `value:${index}`,
+      readOnly: !editMode,
+      tabIndex: editMode ? 0 : -1,
       type: VirtualDomElements.Input,
-      value: editing ? editingValue : maskedValue,
-      ...(editing && { onInput: DomEventListenerFunctions.HandleInput }),
+      value,
+      ...(editMode && { onInput: DomEventListenerFunctions.HandleInput }),
     },
     {
-      childCount: actionCount,
+      ariaLabel: SecretsViewStrings.actionsForSecret(secret.extensionId, secret.key),
+      childCount: editMode ? 3 : 2,
       className: ClassNames.SecretsViewActions,
+      role: AriaRoles.ToolBar,
       type: VirtualDomElements.Div,
     },
-    ...actionDom,
+    ...actions,
   ]
 }
