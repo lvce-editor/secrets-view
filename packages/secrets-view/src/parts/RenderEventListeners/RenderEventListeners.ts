@@ -8,6 +8,6 @@ export const renderEventListeners = (): readonly any[] => [
   },
   {
     name: DomEventListenerFunctions.HandleInput,
-    params: ['handleInput', EventExpression.TargetValue],
+    params: ['handleInput', EventExpression.TargetName, EventExpression.TargetValue],
   },
 ]

@@ -5,12 +5,16 @@ import { loadContent } from '../src/parts/LoadContent/LoadContent.ts'
 import * as PlatformState from '../src/parts/PlatformState/PlatformState.ts'
 
 const state: SecretsViewState = {
-  editingIndex: -1,
-  editingValue: '',
+  deletedIndices: [],
+  editingValues: [],
+  editMode: false,
   errorMessage: '',
   height: 600,
   loaded: false,
+  originalValues: [],
+  revealedIndices: [],
   secrets: [],
+  secretValues: [],
   uid: 1,
   width: 800,
   x: 0,

@@ -8,6 +8,6 @@ export const test: Test = async ({ expect, SecretsView }: TestApi) => {
 
   await expect(SecretsView.root().locator('.SecretsViewTitle')).toHaveText('Secrets')
   await expect(SecretsView.root().locator('.SecretsViewDescription')).toHaveText(
-    'Stored extension secrets are encrypted. Values stay hidden until you choose Edit.',
+    'Stored extension secrets are encrypted. Reveal or copy a value explicitly; choose Edit to update or delete secrets.',
   )
 }

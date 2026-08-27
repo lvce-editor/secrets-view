@@ -3,12 +3,16 @@ import * as SecretsViewStates from '../SecretsViewStates/SecretsViewStates.ts'
 
 export const create = (uid: number, _uri: string, x: number, y: number, width: number, height: number): void => {
   const state: SecretsViewState = {
-    editingIndex: -1,
-    editingValue: '',
+    deletedIndices: [],
+    editingValues: [],
+    editMode: false,
     errorMessage: '',
     height,
     loaded: false,
+    originalValues: [],
+    revealedIndices: [],
     secrets: [],
+    secretValues: [],
     uid,
     width,
     x,
