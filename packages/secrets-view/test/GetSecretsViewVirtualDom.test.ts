@@ -48,3 +48,18 @@ test('renders an empty status after loading', () => {
   })
   expect(JSON.stringify(dom)).toContain('No secrets stored.')
 })
+
+test('renders a loading status before loading', () => {
+  const dom = getSecretsViewVirtualDom({
+    editingIndex: -1,
+    editingValue: '',
+    height: 600,
+    loaded: false,
+    secrets: [],
+    uid: 1,
+    width: 800,
+    x: 0,
+    y: 0,
+  })
+  expect(JSON.stringify(dom)).toContain('Loading secrets…')
+})

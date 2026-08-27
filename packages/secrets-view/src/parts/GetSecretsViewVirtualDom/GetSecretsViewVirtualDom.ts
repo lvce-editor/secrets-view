@@ -4,6 +4,7 @@ import type { SecretsViewState } from '../SecretsViewState/SecretsViewState.ts'
 import * as SecretsAriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import { getSecretRowVirtualDom } from '../GetSecretRowVirtualDom/GetSecretRowVirtualDom.ts'
+import * as SecretsViewStrings from '../SecretsViewStrings/SecretsViewStrings.ts'
 
 const text = (value: string): VirtualDomNode => ({ childCount: 0, text: value, type: VirtualDomElements.Text })
 
@@ -38,10 +39,7 @@ const descriptionNode: VirtualDomNode = {
   type: VirtualDomElements.P,
 }
 
-const titleText = text('Secrets')
-const descriptionText = text('Stored extension secrets are encrypted. Values stay hidden until you choose Edit.')
-
-const getEmptyDom = (loaded: boolean): readonly VirtualDomNode[] => [emptyNode, text(loaded ? 'No secrets stored.' : 'Loading secrets…')]
+const getEmptyDom = (loaded: boolean): readonly VirtualDomNode[] => [emptyNode, text(loaded ? SecretsViewStrings.noSecretsStored() : SecretsViewStrings.loadingSecrets())]
 
 export const getSecretsViewVirtualDom = (state: SecretsViewState): readonly VirtualDomNode[] => {
   const { editingIndex, editingValue, loaded, secrets } = state
@@ -51,11 +49,11 @@ export const getSecretsViewVirtualDom = (state: SecretsViewState): readonly Virt
     rootNode,
     headerNode,
     titleNode,
-    titleText,
+    text(SecretsViewStrings.secrets()),
     descriptionNode,
-    descriptionText,
+    text(SecretsViewStrings.description()),
     {
-      ariaLabel: 'Stored secrets',
+      ariaLabel: SecretsViewStrings.storedSecrets(),
       childCount: secrets.length || 1,
       className: ClassNames.SecretsViewList,
       role: SecretsAriaRoles.List,

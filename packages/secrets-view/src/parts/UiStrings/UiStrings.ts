@@ -1,0 +1,8 @@
+export const Cancel = 'Cancel'
+export const Description = 'Stored extension secrets are encrypted. Values stay hidden until you choose Edit.'
+export const Edit = 'Edit'
+export const LoadingSecrets = 'Loading secrets…'
+export const NoSecretsStored = 'No secrets stored.'
+export const Save = 'Save'
+export const Secrets = 'Secrets'
+export const StoredSecrets = 'Stored secrets'

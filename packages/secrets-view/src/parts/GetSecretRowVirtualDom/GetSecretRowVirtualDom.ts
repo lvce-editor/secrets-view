@@ -4,6 +4,7 @@ import type { Secret } from '../Secret/Secret.ts'
 import * as AriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
+import * as SecretsViewStrings from '../SecretsViewStrings/SecretsViewStrings.ts'
 
 const maskedValue = '••••••••••••'
 
@@ -30,7 +31,9 @@ const button = (name: string, label: string): readonly VirtualDomNode[] => [
 
 export const getSecretRowVirtualDom = (secret: Secret, index: number, editingIndex: number, editingValue: string): readonly VirtualDomNode[] => {
   const editing = editingIndex === index
-  const actionDom = editing ? [...button(`save:${index}`, 'Save'), ...button(`cancel:${index}`, 'Cancel')] : button(`edit:${index}`, 'Edit')
+  const actionDom = editing
+    ? [...button(`save:${index}`, SecretsViewStrings.save()), ...button(`cancel:${index}`, SecretsViewStrings.cancel())]
+    : button(`edit:${index}`, SecretsViewStrings.edit())
   const actionCount = editing ? 2 : 1
   return [
     rowNode,
