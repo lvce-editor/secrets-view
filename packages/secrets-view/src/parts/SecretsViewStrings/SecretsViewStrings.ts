@@ -21,6 +21,10 @@ export const editSecret = (extensionId: string, key: string): string => {
   return I18nString.i18nString(UiStrings.EditSecret, { PH1: extensionId, PH2: key })
 }
 
+export const failedToRevealSecret = (extensionId: string, key: string, message: string): string => {
+  return I18nString.i18nString(UiStrings.FailedToRevealSecret, { PH1: extensionId, PH2: key, PH3: message })
+}
+
 export const loadingSecrets = (): string => {
   return I18nString.i18nString(UiStrings.LoadingSecrets)
 }

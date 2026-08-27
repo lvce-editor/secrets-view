@@ -6,6 +6,7 @@ export const setData = (state: SecretsViewState, secrets: readonly Secret[]): Se
   ...state,
   editingIndex: -1,
   editingValue: '',
+  errorMessage: '',
   loaded: true,
   secrets: secrets.toSorted(compareSecrets),
 })

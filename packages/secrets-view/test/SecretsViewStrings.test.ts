@@ -17,6 +17,12 @@ test('editSecret', () => {
   expect(SecretsViewStrings.editSecret('sample.extension', 'token')).toBe('Edit secret sample.extension / token')
 })
 
+test('failedToRevealSecret', () => {
+  expect(SecretsViewStrings.failedToRevealSecret('sample.extension', 'token', 'Encryption unavailable')).toBe(
+    'Could not reveal secret sample.extension / token: Encryption unavailable',
+  )
+})
+
 test('loadingSecrets', () => {
   expect(SecretsViewStrings.loadingSecrets()).toBe('Loading secrets…')
 })
