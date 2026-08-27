@@ -39,7 +39,10 @@ const descriptionNode: VirtualDomNode = {
   type: VirtualDomElements.P,
 }
 
-const getEmptyDom = (loaded: boolean): readonly VirtualDomNode[] => [emptyNode, text(loaded ? SecretsViewStrings.noSecretsStored() : SecretsViewStrings.loadingSecrets())]
+const getEmptyDom = (loaded: boolean): readonly VirtualDomNode[] => [
+  emptyNode,
+  text(loaded ? SecretsViewStrings.noSecretsStored() : SecretsViewStrings.loadingSecrets()),
+]
 
 export const getSecretsViewVirtualDom = (state: SecretsViewState): readonly VirtualDomNode[] => {
   const { editingIndex, editingValue, loaded, secrets } = state
