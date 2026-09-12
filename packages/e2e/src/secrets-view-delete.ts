@@ -10,7 +10,8 @@ export const test: Test = async ({ expect, SecretsView }: TestApi) => {
     { extensionId: 'second.extension', key: 'token', value: 'second-secret' },
   ])
 
-  await expect(SecretsView.root().locator('[name="delete:0"]')).toHaveCount(0)
+  const deleteButton = SecretsView.root().locator('[name="delete:0"]')
+  await expect(deleteButton).toHaveCount(0)
   await SecretsView.root().locator('[name="edit"]').click()
   await SecretsView.row(0).locator('[name="delete:0"]').click()
   await expect(SecretsView.rows()).toHaveCount(1)

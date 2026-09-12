@@ -6,6 +6,11 @@ import * as ClassNames from '../ClassNames/ClassNames.ts'
 import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEventListenerFunctions.ts'
 import * as SecretsViewStrings from '../SecretsViewStrings/SecretsViewStrings.ts'
 
+const iconButtonClassName = mergeClassNames(ClassNames.IconButton, ClassNames.SecretsViewButton)
+const extensionIdClassName = mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewExtensionId)
+const keyClassName = mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewKey)
+const valueClassName = mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewValue)
+
 const maskedValue = '••••••••••••'
 
 const rowNode: VirtualDomNode = {
@@ -19,7 +24,7 @@ const iconButton = (name: string, label: string, iconClassName: string): readonl
   {
     ariaLabel: label,
     childCount: 1,
-    className: mergeClassNames(ClassNames.IconButton, ClassNames.SecretsViewButton),
+    className: iconButtonClassName,
     name,
     onClick: DomEventListenerFunctions.HandleClick,
     title: label,
@@ -59,7 +64,7 @@ export const getSecretRowVirtualDom = (
     rowNode,
     {
       childCount: 0,
-      className: mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewExtensionId),
+      className: extensionIdClassName,
       inputType: 'text',
       readOnly: true,
       tabIndex: -1,
@@ -69,7 +74,7 @@ export const getSecretRowVirtualDom = (
     },
     {
       childCount: 0,
-      className: mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewKey),
+      className: keyClassName,
       inputType: 'text',
       readOnly: true,
       tabIndex: -1,
@@ -79,7 +84,7 @@ export const getSecretRowVirtualDom = (
     },
     {
       childCount: 0,
-      className: mergeClassNames(ClassNames.InputBox, ClassNames.SecretsViewValue),
+      className: valueClassName,
       inputType: revealed ? 'text' : 'password',
       name: `value:${index}`,
       readOnly: !editMode,
