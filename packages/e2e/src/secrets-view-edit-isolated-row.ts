@@ -15,6 +15,8 @@ export const test: Test = async ({ expect, SecretsView }: TestApi) => {
   await expect(SecretsView.value(0)).toHaveValue('first-secret')
   await expect(SecretsView.value(1)).not.toHaveAttribute('readonly', '')
   await expect(SecretsView.value(1)).toHaveValue('second-secret')
-  await expect(SecretsView.row(0).locator('[name="delete:0"]')).toBeVisible()
-  await expect(SecretsView.row(1).locator('[name="delete:1"]')).toBeVisible()
+  const firstDeleteButton = SecretsView.row(0).locator('[name="delete:0"]')
+  await expect(firstDeleteButton).toBeVisible()
+  const secondDeleteButton = SecretsView.row(1).locator('[name="delete:1"]')
+  await expect(secondDeleteButton).toBeVisible()
 }

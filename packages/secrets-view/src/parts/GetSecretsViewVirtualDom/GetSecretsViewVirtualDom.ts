@@ -1,5 +1,5 @@
 import type { VirtualDomNode } from '@lvce-editor/virtual-dom-worker'
-import { AriaRoles, mergeClassNames, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
+import { AriaRoles, mergeClassNames, text, VirtualDomElements } from '@lvce-editor/virtual-dom-worker'
 import type { SecretsViewState } from '../SecretsViewState/SecretsViewState.ts'
 import * as SecretsAriaRoles from '../AriaRoles/AriaRoles.ts'
 import * as ClassNames from '../ClassNames/ClassNames.ts'
@@ -7,7 +7,7 @@ import * as DomEventListenerFunctions from '../DomEventListenerFunctions/DomEven
 import { getSecretRowVirtualDom } from '../GetSecretRowVirtualDom/GetSecretRowVirtualDom.ts'
 import * as SecretsViewStrings from '../SecretsViewStrings/SecretsViewStrings.ts'
 
-const text = (value: string): VirtualDomNode => ({ childCount: 0, text: value, type: VirtualDomElements.Text })
+const viewClassName = mergeClassNames(ClassNames.Viewlet, ClassNames.SecretsView)
 
 const emptyNode: VirtualDomNode = {
   childCount: 1,
@@ -93,7 +93,7 @@ export const getSecretsViewVirtualDom = (state: SecretsViewState): readonly Virt
   return [
     {
       childCount: errorMessage ? 3 : 2,
-      className: mergeClassNames(ClassNames.Viewlet, ClassNames.SecretsView),
+      className: viewClassName,
       type: VirtualDomElements.Div,
     },
     headerNode,

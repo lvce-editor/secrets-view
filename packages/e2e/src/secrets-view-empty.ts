@@ -7,6 +7,7 @@ export const test: Test = async ({ expect, SecretsView }: TestApi) => {
   await SecretsView.setData([])
 
   await expect(SecretsView.rows()).toHaveCount(0)
-  await expect(SecretsView.root().locator('.SecretsViewEmpty')).toBeVisible()
-  await expect(SecretsView.root().locator('.SecretsViewEmpty')).toHaveText('No secrets stored.')
+  const emptyMessage = SecretsView.root().locator('.SecretsViewEmpty')
+  await expect(emptyMessage).toBeVisible()
+  await expect(emptyMessage).toHaveText('No secrets stored.')
 }
