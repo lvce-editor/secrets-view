@@ -10,7 +10,7 @@ const instantiationsPath = join(root, 'packages', 'secrets-view')
 
 const workerPath = join(root, '.tmp/dist/dist/secretsViewWorkerMain.js')
 
-const playwrightPath = import.meta.resolve('../../../node_modules/playwright/index.mjs')
+const playwrightPath = import.meta.resolve('playwright')
 
 await measureMemory({
   playwrightPath,

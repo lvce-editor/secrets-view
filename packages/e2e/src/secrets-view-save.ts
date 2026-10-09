@@ -9,7 +9,9 @@ export const test: Test = async ({ expect, SecretsView }: TestApi) => {
 
   await SecretsView.root().locator('[name="edit"]').click()
   await SecretsView.value(0).type('-updated')
-  await SecretsView.root().locator('[name="save"]').click()
+  const saveButton = SecretsView.root().locator('[name="save"]')
+  await expect(saveButton).toBeVisible()
+  await saveButton.click()
   await expect(SecretsView.value(0)).toHaveAttribute('readonly', '')
   await expect(SecretsView.value(0)).toHaveValue('••••••••••••')
   const editButton = SecretsView.root().locator('[aria-label="Edit secrets"]')

@@ -8,15 +8,23 @@ const sharedProcess = await import(pathToFileURL(sharedProcessPath).toString())
 
 process.env.PATH_PREFIX = '/secrets-view'
 const { commitHash } = await sharedProcess.exportStatic({ extensionPath: '', root, testPath: 'packages/e2e' })
-const rendererWorkerPath = join(root, 'dist', commitHash, 'packages', 'renderer-worker', 'dist', 'rendererWorkerMain.js')
-const workerPath = join(root, '.tmp', 'dist', 'dist', 'secretsViewWorkerMain.js')
-const remoteUrl = `/remote/${pathToFileURL(workerPath).toString().slice(8)}`
-const content = await readFile(rendererWorkerPath, 'utf8')
-const occurrence = `// const secretsViewWorkerUrl = \`\${assetDir}/packages/secrets-view/dist/secretsViewWorkerMain.js\`\nconst secretsViewWorkerUrl = \`${remoteUrl}\``
-const replacement = 'const secretsViewWorkerUrl = `${assetDir}/packages/secrets-view/dist/secretsViewWorkerMain.js`'
-if (content.includes(occurrence)) {
-  await writeFile(rendererWorkerPath, content.replace(occurrence, replacement))
+const indexPath = join(root, 'dist', 'index.html')
+const content = await readFile(indexPath, 'utf8')
+const configPattern = /(<script\b[^>]*\bid=["']Config["'][^>]*>)([\s\S]*?)(<\/script>)/i
+const match = content.match(configPattern)
+if (!match) {
+  throw new Error('LVCE runtime configuration not found')
 }
+const config = JSON.parse(match[2])
+config.workerUrls['develop.secretsViewPath'] = `/secrets-view/${commitHash}/packages/secrets-view/dist/secretsViewWorkerMain.js`
+config.workerUrls['develop.testWorkerPath'] = `/secrets-view/${commitHash}/packages/test-worker/dist/testWorkerMain.js`
+await writeFile(
+  indexPath,
+  content.replace(configPattern, (_match, opening, _config, closing) => `${opening}\n${JSON.stringify(config, null, 2)}\n${closing}`),
+)
+const workerPath = join(root, '.tmp', 'dist', 'dist', 'secretsViewWorkerMain.js')
+const testWorkerPath = join(root, 'dist', commitHash, 'packages', 'test-worker', 'dist', 'testWorkerMain.js')
+await cp(new URL(import.meta.resolve('@lvce-editor/test-worker')), testWorkerPath)
 
 const staticWorkerPath = join(root, 'dist', commitHash, 'packages', 'secrets-view', 'dist', 'secretsViewWorkerMain.js')
 await mkdir(dirname(staticWorkerPath), { recursive: true })

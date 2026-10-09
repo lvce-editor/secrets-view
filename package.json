@@ -27,8 +27,10 @@
   },
   "devDependencies": {
     "@lvce-editor/eslint-config": "^18.14.2",
+    "@lvce-editor/test-worker": "17.14.0",
     "eslint": "10.12.0",
     "knip": "^6.32.3",
+    "playwright": "1.62.1",
     "prettier": "^3.9.6",
     "typescript": "^6.0.3"
   }
